@@ -7,6 +7,18 @@ async function runFridgeApp() {
   const rl = readline.createInterface({ input, output });
   const fridge = [];
 
+  const printCurrentFridge = () => {
+    console.log("--- Текущее состояние холодильника ---");
+    if (fridge.length === 0) {
+      console.log("Холодильник пуст.");
+    } else {
+      fridge.forEach((item) => {
+        console.log(`- ${item.name}: ${item.count}`);
+      });
+    }
+    console.log("---------------------------------------\n");
+  };
+
   console.log("Программа для учета продуктов в холодильнике.");
   console.log("Введите продукты в холодильнике.Для завершения введите 'exit', 'выход', 'стоп' или 'stop'.");
 
@@ -31,8 +43,12 @@ async function runFridgeApp() {
       `Введите количество продукта "${trimmedName}": `,
     );
     const count = parseInt(countInput.trim(), 10);  
+
+    if (count < 0) {
+      console.log("Количество не может быть отрицательным. Попробуйте снова.\n");
+      continue; 
+    }
     const validCount = Number.isNaN(count) ? 0 : count;
-    
 
     const existingIndex = fridge.findIndex(
       (item) => item.name.toLowerCase() === trimmedName.toLowerCase()
@@ -54,6 +70,8 @@ async function runFridgeApp() {
         console.log("Продукт добавлен:", { name: trimmedName, count: validCount });
       }
     }
+
+    printCurrentFridge();
   }
 
   rl.close(); 
